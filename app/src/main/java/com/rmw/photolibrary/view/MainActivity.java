@@ -9,12 +9,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-
 import com.rmw.photolibrary.R;
 import com.rmw.photolibrary.adapter.MainActivityAdapter;
 import com.rmw.photolibrary.model.ImageModel;
 import com.rmw.photolibrary.viewmodel.MainActivityViewModel;
-
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {

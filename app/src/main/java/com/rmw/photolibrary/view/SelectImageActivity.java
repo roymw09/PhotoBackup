@@ -17,12 +17,8 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
-
 import com.rmw.photolibrary.R;
-import com.rmw.photolibrary.view.LoginActivity;
-import com.rmw.photolibrary.view.MainActivity;
 import com.rmw.photolibrary.viewmodel.SelectImageActivityViewModel;
-
 import java.io.IOException;
 
 public class SelectImageActivity extends AppCompatActivity {

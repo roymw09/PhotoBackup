@@ -53,24 +53,21 @@ public class LoginActivity extends AppCompatActivity {
 
     ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
-            new ActivityResultCallback<ActivityResult>() {
-                @Override
-                public void onActivityResult(ActivityResult result) {
-                    // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
-                    if (result.getResultCode() == RC_SIGN_IN) {
-                        Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(result.getData());
-                        try {
-                            // Google Sign In was successful
-                            GoogleSignInAccount account = task.getResult(ApiException.class);
-                            Log.d("MSG", "firebaseAuthWithGoogle:" + account.getId());
-                        } catch (ApiException e) {
-                            // Google Sign In failed
-                            Log.w("MSG", "Google sign in failed", e);
-                        }
+            result -> {
+                // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
+                if (result.getResultCode() == RC_SIGN_IN) {
+                    Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(result.getData());
+                    try {
+                        // Google Sign In was successful
+                        GoogleSignInAccount account = task.getResult(ApiException.class);
+                        Log.d("MSG", "firebaseAuthWithGoogle:" + account.getId());
+                    } catch (ApiException e) {
+                        // Google Sign In failed
+                        Log.w("MSG", "Google sign in failed", e);
                     }
-                    // Verify GoogleSignIn was successful and authenticate with Firebase
-                    handleGoogleSignInResult();
                 }
+                // Verify GoogleSignIn was successful and authenticate with Firebase
+                handleGoogleSignInResult();
             });
 
     private void handleGoogleSignInResult() {

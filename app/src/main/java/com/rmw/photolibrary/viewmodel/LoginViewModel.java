@@ -9,7 +9,7 @@ import com.rmw.photolibrary.repo.AuthRepository;
 
 public class LoginViewModel extends AndroidViewModel {
 
-    private Application application;
+    private final Application application;
     private AuthRepository authRepository;
     private MutableLiveData<FirebaseUser> userMutableLiveData;
 
