@@ -1,7 +1,6 @@
 package com.rmw.photolibrary.viewmodel;
 
 import android.app.Application;
-import android.graphics.Bitmap;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
@@ -28,8 +27,8 @@ public class MainActivityViewModel extends AndroidViewModel {
         authRepository.logOut();
     }
 
-    public void deleteImage(String firebaseUserId, String refKey) {
-        mainActivityRepository.deleteImage(firebaseUserId, refKey);
+    public void deleteImage(String firebaseUserId, String refKey, ImageModel imageModel) {
+        mainActivityRepository.deleteImage(firebaseUserId, refKey, imageModel);
     }
 
     public void saveImageToGallery(String imageRefUrl) {

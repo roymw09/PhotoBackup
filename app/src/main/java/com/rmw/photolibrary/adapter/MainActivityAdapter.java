@@ -3,8 +3,6 @@ package com.rmw.photolibrary.adapter;
 import android.app.AlertDialog;
 import android.app.Application;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -75,9 +73,6 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
                     .setTitle(R.string.save_image_alert_title)
                     .setMessage(R.string.save_image_alert_message)
                     .setPositiveButton(R.string.alert_yes, (dialog, which) -> {
-                        // Get the bitmap from the ImageView
-                        BitmapDrawable bitmapDrawable = (BitmapDrawable) image.getDrawable();
-                        Bitmap imageBitmap = bitmapDrawable.getBitmap();
                         // Save the image to phones gallery from Firebase storage
                         String imageRefUrl = imageModelArrayList.get(getAbsoluteAdapterPosition()).getImgRef();
                         mainActivityViewModel.saveImageToGallery(imageRefUrl);
@@ -95,7 +90,8 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
                         // Delete image on positive button click using Firebase user unique id and image reference key
                         String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
                         String refKey = imageModelArrayList.get(getAbsoluteAdapterPosition()).getRefKey();
-                        mainActivityViewModel.deleteImage(uid, refKey);
+                        ImageModel imageModel = imageModelArrayList.get(getAbsoluteAdapterPosition());
+                        mainActivityViewModel.deleteImage(uid, refKey, imageModel);
                     })
                     .setNegativeButton(R.string.alert_no, null)
                     .show();

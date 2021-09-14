@@ -1,7 +1,5 @@
 package com.rmw.photolibrary.view;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,7 +23,6 @@ public class LoginActivity extends AppCompatActivity {
     private static final int RC_SIGN_IN = 9001;
     private GoogleSignInClient googleSignInClient;
     private LoginViewModel loginViewModel;
-    private String tokenId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +43,7 @@ public class LoginActivity extends AppCompatActivity {
         loginButton.setOnClickListener(this::signIn);
     }
 
-    private void signIn(View v) {
+    public void signIn(View v) {
         Intent intent = googleSignInClient.getSignInIntent();
         activityResultLauncher.launch(intent);
     }
@@ -73,7 +70,7 @@ public class LoginActivity extends AppCompatActivity {
     private void handleGoogleSignInResult() {
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(LoginActivity.this);
         if (account != null) {
-            tokenId = account.getIdToken(); // get Google IdToken for Firebase authentication
+            String tokenId = account.getIdToken(); // get Google IdToken for Firebase authentication
 
             // Log the Firebase user in with their Google IdToken
             loginViewModel.login(tokenId);

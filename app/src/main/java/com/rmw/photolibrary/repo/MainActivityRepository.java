@@ -3,27 +3,22 @@ package com.rmw.photolibrary.repo;
 import android.app.Application;
 import android.app.DownloadManager;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Environment;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
-
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.RequestBuilder;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.rmw.photolibrary.R;
 import com.rmw.photolibrary.model.ImageModel;
 import org.jetbrains.annotations.NotNull;
-
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -46,7 +41,18 @@ public class MainActivityRepository {
         databaseReference = database.getReference();
     }
 
-    public void deleteImage(String firebaseUserId, String refKey) {
+    public void deleteImage(String firebaseUserId, String refKey, ImageModel imageModel) {
+        // Delete image from storage
+        StorageReference imageRef = FirebaseStorage.getInstance().getReferenceFromUrl(imageModel.getImgRef());
+        imageRef.delete().addOnSuccessListener(aVoid -> {
+            // If storage deletion is successful, delete the image reference from the database
+            DatabaseReference databaseReference = database.getReference()
+                    .child(firebaseUserId)
+                    .child(refKey);
+            databaseReference.removeValue();
+            Toast.makeText(application, R.string.toast_deleted_image, Toast.LENGTH_SHORT).show();
+        });
+
         DatabaseReference databaseReference = database.getReference()
                 .child(firebaseUserId)
                 .child(refKey);

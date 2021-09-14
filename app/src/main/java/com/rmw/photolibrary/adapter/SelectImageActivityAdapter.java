@@ -11,8 +11,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.rmw.photolibrary.R;
 import com.rmw.photolibrary.model.ImageModel;
-import com.rmw.photolibrary.viewmodel.SelectImageActivityViewModel;
-
 import java.util.ArrayList;
 
 public class SelectImageActivityAdapter extends RecyclerView.Adapter<SelectImageActivityAdapter.SelectActivityViewHolder> {
@@ -20,13 +18,11 @@ public class SelectImageActivityAdapter extends RecyclerView.Adapter<SelectImage
     private final LayoutInflater inflater;
     private ArrayList<ImageModel> imageModelArrayList;
     private Context context;
-    private SelectImageActivityViewModel selectImageActivityViewModel;
 
     public SelectImageActivityAdapter(Application application, Context ctx, ArrayList<ImageModel> imageModelArrayList) {
         inflater = LayoutInflater.from(ctx);
         this.imageModelArrayList = imageModelArrayList;
         this.context = ctx;
-        selectImageActivityViewModel = new SelectImageActivityViewModel(application);
     }
 
     @NonNull
@@ -59,7 +55,6 @@ public class SelectImageActivityAdapter extends RecyclerView.Adapter<SelectImage
         public SelectActivityViewHolder(@NonNull View itemView) {
             super(itemView);
             image = itemView.findViewById(R.id.select_activity_row_layout_image_view);
-
         }
     }
 }
