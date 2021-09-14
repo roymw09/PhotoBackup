@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import com.rmw.photolibrary.repo.AuthRepository;
 import com.rmw.photolibrary.repo.SelectImageActivityRepository;
+import java.util.ArrayList;
 
 public class SelectImageActivityViewModel extends AndroidViewModel {
 
@@ -25,7 +26,7 @@ public class SelectImageActivityViewModel extends AndroidViewModel {
         authRepository.logOut();
     }
 
-    public void uploadImage(Uri filePath, String firebaseUserId) {
+    public void uploadImage(ArrayList<Uri> filePath, String firebaseUserId) {
         selectImageActivityRepository.uploadImageToFirebase(filePath, firebaseUserId);
     }
 }

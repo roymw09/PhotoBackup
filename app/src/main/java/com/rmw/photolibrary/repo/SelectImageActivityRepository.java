@@ -9,6 +9,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.rmw.photolibrary.R;
+import java.util.ArrayList;
 import java.util.UUID;
 
 public class SelectImageActivityRepository {
@@ -26,25 +27,27 @@ public class SelectImageActivityRepository {
     }
 
     // Upload img to Firebase storage and save img reference in real time database
-    public void uploadImageToFirebase(Uri filePath, String firebaseUserId) {
-        if (filePath != null) {
-            StorageReference ref = storageReference.child("images/" + UUID.randomUUID().toString());
-            // Upload the selected image to Firebase storage
-            ref.putFile(filePath)
-                    .addOnSuccessListener(taskSnapshot -> {
+    public void uploadImageToFirebase(ArrayList<Uri> uris, String firebaseUserId) {
+        if (uris != null) {
+            for (Uri filePath : uris) {
+                StorageReference ref = storageReference.child("images/" + UUID.randomUUID().toString());
+                // Upload the selected image to Firebase storage
+                ref.putFile(filePath)
+                        .addOnSuccessListener(taskSnapshot -> {
                         /* Img has been uploaded to firebase storage successfully
                           now get the img download url and save it to the real time database */
-                        ref.getDownloadUrl().addOnSuccessListener(uri -> {
-                            // Save img download url in real time database
-                            // img url is saved with the users Firebase unique id so each user only has access to their own data
-                            Log.d("TAG", "Download URL = " + uri.toString());
-                            Toast.makeText(application, R.string.toast_uploaded, Toast.LENGTH_SHORT).show();
-                            databaseReference.child(firebaseUserId).push().setValue(uri.toString());
+                            ref.getDownloadUrl().addOnSuccessListener(uri -> {
+                                // Save img download url in real time database
+                                // img url is saved with the users Firebase unique id so each user only has access to their own data
+                                Log.d("TAG", "Download URL = " + uri.toString());
+                                Toast.makeText(application, R.string.toast_uploaded, Toast.LENGTH_SHORT).show();
+                                databaseReference.child(firebaseUserId).push().setValue(uri.toString());
+                            });
+                        })
+                        .addOnFailureListener(e -> {
+                            Toast.makeText(application, e.getMessage(), Toast.LENGTH_SHORT).show();
                         });
-                    })
-                    .addOnFailureListener(e -> {
-                        Toast.makeText(application, e.getMessage(), Toast.LENGTH_SHORT).show();
-                    });
+            }
         }
     }
 }

@@ -1,15 +1,12 @@
 package com.rmw.photolibrary.view;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.ImageDecoder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
@@ -17,16 +14,22 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import com.rmw.photolibrary.R;
+import com.rmw.photolibrary.adapter.SelectImageActivityAdapter;
+import com.rmw.photolibrary.model.ImageModel;
 import com.rmw.photolibrary.viewmodel.SelectImageActivityViewModel;
-import java.io.IOException;
+import java.util.ArrayList;
 
 public class SelectImageActivity extends AppCompatActivity {
 
     private SelectImageActivityViewModel selectImageActivityViewModel;
-    private ImageView selectedImage;
-    private Uri filePath; // img filepath
     private String firebaseUserId;
+    private RecyclerView recyclerView;
+    private SelectImageActivityAdapter adapter;
+    private ArrayList<ImageModel> imageModelRecyclerArrayList;
+    private ArrayList<Uri> filePathList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,8 +41,9 @@ public class SelectImageActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         selectImageActivityViewModel = new ViewModelProvider(this).get(SelectImageActivityViewModel.class);
+        recyclerView = findViewById(R.id.activity_select_image_recyclerview);
+        imageModelRecyclerArrayList = new ArrayList<>();
 
-        selectedImage = findViewById(R.id.activity_selectImage_image_view);
 
         Button selectButton = findViewById(R.id.activity_selectImage_selectButton);
         selectButton.setOnClickListener(this::selectImageIntent);
@@ -54,9 +58,17 @@ public class SelectImageActivity extends AppCompatActivity {
         if (getIntent().getExtras() != null) {
             firebaseUserId = (String) getIntent().getExtras().get("uid");
         }
+
+        initRecycler();
     }
 
-    // Retrieves filePath and ImageBitmap from select image intent
+    private void initRecycler() {
+        adapter = new SelectImageActivityAdapter(getApplication(), this, imageModelRecyclerArrayList);
+        // Display RecyclerView as a 2 row grid
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+        recyclerView.setAdapter(adapter);
+    }
+
     ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
@@ -64,21 +76,54 @@ public class SelectImageActivity extends AppCompatActivity {
                 public void onActivityResult(ActivityResult result) {
                     if (result.getResultCode() == RESULT_OK && result.getData() != null) {
                         Intent data = result.getData();
-                        filePath = data.getData();
-                        try {
-                            ImageDecoder.Source source = ImageDecoder.createSource(getContentResolver(), filePath);
-                            Bitmap image = ImageDecoder.decodeBitmap(source);
-                            selectedImage.setImageBitmap(image);
-                        } catch (IOException e) {
-                            e.printStackTrace();
+                        // user selects multiple images at once
+                        if (data.getClipData() != null) {
+                            int count = data.getClipData().getItemCount();
+                            int currentItem = 0;
+                            while (currentItem < count) {
+                                // Get image uri
+                                Uri imageUri = data.getClipData().getItemAt(currentItem).getUri();
+
+                                // Store the image uri an ImageModel
+                                ImageModel model = new ImageModel();
+                                model.setImgRef(imageUri.toString());
+                                model.setRefKey("");
+
+                                // add the model to the recyclerArray so our selected images will appear
+                                imageModelRecyclerArrayList.add(model);
+
+                                // add imageUri to the filePathList so the user can upload the select images
+                                filePathList.add(imageUri);
+                                currentItem++;
+                            }
+                            // user selects a single image
+                        } else if (data.getData() != null) {
+                            // Store the image uri an ImageModel
+                            ImageModel model = new ImageModel();
+                            model.setImgRef(data.getData().toString()); // get img uri
+                            model.setRefKey("");
+                            imageModelRecyclerArrayList.add(model);
+
+                            filePathList.add(data.getData()); // add the image url
+
                         }
+
                     }
+                    // display selected images
+                    displaySelectedImage();
                 }
             });
 
+    private void displaySelectedImage() {
+        if (imageModelRecyclerArrayList != null) {
+            adapter.updateList(imageModelRecyclerArrayList);
+        }
+    }
+
     private void clearSelectedImage(View v) {
-        filePath = null;
-        selectedImage.setImageBitmap(null);
+        filePathList.clear(); // clear list of selected image file paths
+        imageModelRecyclerArrayList.clear(); // clear list of image models
+        adapter.updateList(imageModelRecyclerArrayList); // refresh the RecyclerView
     }
 
     private void selectImageIntent(View v) {
@@ -86,6 +131,7 @@ public class SelectImageActivity extends AppCompatActivity {
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
         activityResultLauncher.launch(intent);
     }
 
@@ -104,7 +150,7 @@ public class SelectImageActivity extends AppCompatActivity {
 
     // Upload img to Firebase storage and save img reference in real time database
     private void upload(View v) {
-        selectImageActivityViewModel.uploadImage(filePath, firebaseUserId);
+        selectImageActivityViewModel.uploadImage(filePathList, firebaseUserId);
         clearSelectedImage(v);
     }
 
@@ -117,8 +163,7 @@ public class SelectImageActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
+    public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_images:
                 goToMainActivity();

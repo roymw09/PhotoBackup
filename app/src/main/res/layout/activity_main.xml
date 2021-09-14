@@ -23,7 +23,7 @@
             android:layout_height="wrap_content"
             android:footerDividersEnabled="true"
             android:layout_gravity="center"
-            tools:listitem="@layout/row_layout"/>
+            tools:listitem="@layout/select_activity_recycler_view"/>
 
     </LinearLayout>
 
