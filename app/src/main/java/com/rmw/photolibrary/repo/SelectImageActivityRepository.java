@@ -43,7 +43,7 @@ public class SelectImageActivityRepository {
                         });
                     })
                     .addOnFailureListener(e -> {
-                        Toast.makeText(application, e.getMessage(), Toast.LENGTH_SHORT).show(); // TODO - was context
+                        Toast.makeText(application, e.getMessage(), Toast.LENGTH_SHORT).show();
                     });
         }
     }
