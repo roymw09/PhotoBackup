@@ -1,12 +1,20 @@
 package com.rmw.photolibrary.repo;
 
 import android.app.Application;
+import android.app.DownloadManager;
+import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestBuilder;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -15,12 +23,15 @@ import com.google.firebase.database.ValueEventListener;
 import com.rmw.photolibrary.R;
 import com.rmw.photolibrary.model.ImageModel;
 import org.jetbrains.annotations.NotNull;
+
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Locale;
 
 public class MainActivityRepository {
 
+    private final static String ALBUM_NAME = "PhotoLib";
     private final Application application;
     private FirebaseDatabase database;
     private DatabaseReference databaseReference;
@@ -44,12 +55,23 @@ public class MainActivityRepository {
     }
 
     // Save image to users' gallery
-    public void saveImageToGallery(Bitmap imageBitmap) {
+    public void saveImageToGallery(String imageRefUrl) {
         String time = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(System.currentTimeMillis());
         String imageName = time + ".PNG";
+        // Downloads image from Firebase storage using the imageRefUrl
         try {
-            MediaStore.Images.Media
-                    .insertImage(application.getContentResolver(), imageBitmap, imageName, "From PhotoLib");
+            DownloadManager downloadManager = (DownloadManager) application.getSystemService(Context.DOWNLOAD_SERVICE);
+            Uri imageRefUri = Uri.parse(imageRefUrl);
+            DownloadManager.Request request = new DownloadManager.Request(imageRefUri);
+            request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE)
+                    .setAllowedOverRoaming(false)
+                    .setTitle(imageName)
+                    .setMimeType("image/png")
+                    .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+                    .setDestinationInExternalPublicDir(Environment.DIRECTORY_PICTURES,
+                            File.separator + ALBUM_NAME + File.separator + imageName);
+
+            downloadManager.enqueue(request);
             Toast.makeText(application, R.string.toast_image_saved_to_gallery, Toast.LENGTH_SHORT).show();
         }
         catch (Exception e){

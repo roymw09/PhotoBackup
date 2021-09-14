@@ -78,8 +78,9 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
                         // Get the bitmap from the ImageView
                         BitmapDrawable bitmapDrawable = (BitmapDrawable) image.getDrawable();
                         Bitmap imageBitmap = bitmapDrawable.getBitmap();
-                        // Save the image to phones gallery
-                        mainActivityViewModel.saveImageToGallery(imageBitmap);
+                        // Save the image to phones gallery from Firebase storage
+                        String imageRefUrl = imageModelArrayList.get(getAbsoluteAdapterPosition()).getImgRef();
+                        mainActivityViewModel.saveImageToGallery(imageRefUrl);
                     })
                     .setNegativeButton(R.string.alert_no, null)
                     .show();
@@ -87,13 +88,14 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
 
         // Delete image alert dialog
         private void showDeleteImageAlertDialog(View v) {
-            String refKey = imageModelArrayList.get(getAbsoluteAdapterPosition()).getRefKey();
             new AlertDialog.Builder(context)
                     .setTitle(R.string.delete_image_alert_title)
                     .setMessage(R.string.delete_image_alert_message)
                     .setPositiveButton(R.string.alert_yes, (dialog, which) -> {
-                        // Delete image on positive button click
-                        mainActivityViewModel.deleteImage(FirebaseAuth.getInstance().getCurrentUser().getUid(), refKey);
+                        // Delete image on positive button click using Firebase user unique id and image reference key
+                        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                        String refKey = imageModelArrayList.get(getAbsoluteAdapterPosition()).getRefKey();
+                        mainActivityViewModel.deleteImage(uid, refKey);
                     })
                     .setNegativeButton(R.string.alert_no, null)
                     .show();

@@ -32,8 +32,8 @@ public class MainActivityViewModel extends AndroidViewModel {
         mainActivityRepository.deleteImage(firebaseUserId, refKey);
     }
 
-    public void saveImageToGallery(Bitmap imageBitmap) {
-        mainActivityRepository.saveImageToGallery(imageBitmap);
+    public void saveImageToGallery(String imageRefUrl) {
+        mainActivityRepository.saveImageToGallery(imageRefUrl);
     }
 
     public MutableLiveData<ArrayList<ImageModel>> loadImagesFromFirebase(String firebaseUserId) {
