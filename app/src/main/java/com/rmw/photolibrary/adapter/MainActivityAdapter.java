@@ -3,7 +3,6 @@ package com.rmw.photolibrary.adapter;
 import android.app.AlertDialog;
 import android.app.Application;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.view.LayoutInflater;
@@ -25,7 +24,6 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
     private ArrayList<ImageModel> imageModelArrayList;
     private Context context;
     private MainActivityViewModel mainActivityViewModel;
-    private String refKey;
 
     public MainActivityAdapter(Application application, Context ctx, ArrayList<ImageModel> imageModelArrayList) {
         inflater = LayoutInflater.from(ctx);
@@ -44,7 +42,6 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
     @Override
     public void onBindViewHolder(@NonNull MainActivityAdapter.MainActivityViewHolder holder, int position) {
         String imageUrl = imageModelArrayList.get(position).getImgRef(); // get image reference url
-        refKey = imageModelArrayList.get(position).getRefKey();
         Glide.with(context).load(imageUrl).into(holder.image); // load image to textview with Glide
     }
 
@@ -67,12 +64,9 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
             image = itemView.findViewById(R.id.row_layout_image_view);
 
             itemView.setOnClickListener(this::showSaveImageAlertDialog);
-            itemView.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    showDeleteImageAlertDialog(v);
-                    return true;
-                }
+            itemView.setOnLongClickListener(v -> {
+                showDeleteImageAlertDialog(v);
+                return true;
             });
         }
 
@@ -80,29 +74,26 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
             new AlertDialog.Builder(context)
                     .setTitle(R.string.save_image_alert_title)
                     .setMessage(R.string.save_image_alert_message)
-                    .setPositiveButton(R.string.alert_yes, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            // Get the bitmap from the ImageView
-                            BitmapDrawable bitmapDrawable = (BitmapDrawable) image.getDrawable();
-                            Bitmap imageBitmap = bitmapDrawable.getBitmap();
-                            // Save the image to phones gallery
-                            mainActivityViewModel.saveImageToGallery(imageBitmap);
-                        }
+                    .setPositiveButton(R.string.alert_yes, (dialog, which) -> {
+                        // Get the bitmap from the ImageView
+                        BitmapDrawable bitmapDrawable = (BitmapDrawable) image.getDrawable();
+                        Bitmap imageBitmap = bitmapDrawable.getBitmap();
+                        // Save the image to phones gallery
+                        mainActivityViewModel.saveImageToGallery(imageBitmap);
                     })
                     .setNegativeButton(R.string.alert_no, null)
                     .show();
         }
 
+        // Delete image alert dialog
         private void showDeleteImageAlertDialog(View v) {
+            String refKey = imageModelArrayList.get(getAbsoluteAdapterPosition()).getRefKey();
             new AlertDialog.Builder(context)
                     .setTitle(R.string.delete_image_alert_title)
                     .setMessage(R.string.delete_image_alert_message)
-                    .setPositiveButton(R.string.alert_yes, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            mainActivityViewModel.deleteImage(FirebaseAuth.getInstance().getCurrentUser().getUid(), refKey);
-                        }
+                    .setPositiveButton(R.string.alert_yes, (dialog, which) -> {
+                        // Delete image on positive button click
+                        mainActivityViewModel.deleteImage(FirebaseAuth.getInstance().getCurrentUser().getUid(), refKey);
                     })
                     .setNegativeButton(R.string.alert_no, null)
                     .show();
