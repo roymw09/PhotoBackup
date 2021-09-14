@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".view.MainActivity">
+
+    <!-- Load the toolbar here -->
+    <include
+        layout="@layout/app_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <GridLayout
+        android:layout_below="@+id/toolbar"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:padding="4dp"
+        android:alignmentMode="alignBounds"
+        android:columnCount="3"
+        android:rowOrderPreserved="false"
+        android:useDefaultMargins="true">
+
+        <Button
+            android:id="@+id/activity_selectImage_selectButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:drawableEnd="@drawable/icons8addimage24"
+            android:background="@drawable/button_background"
+            android:paddingStart="1dp"
+            android:paddingEnd="15dp"
+            android:text="@string/activity_selectImage_selectButton" />
+
+        <Button
+            android:id="@+id/activity_selectImage_uploadButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:drawableEnd="@drawable/icons8uploadbutton24"
+            android:background="@drawable/button_background"
+            android:paddingStart="1dp"
+            android:paddingEnd="15dp"
+            android:text="@string/activity_selectImage_uploadButton" />
+
+        <Button
+            android:id="@+id/activity_selectImage_clearButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:drawableEnd="@drawable/icons8clearsymbol24"
+            android:background="@drawable/button_background"
+            android:paddingStart="1dp"
+            android:paddingEnd="15dp"
+            android:text="@string/activity_selectImage_clearButton" />
+
+    </GridLayout>
+
+    <ImageView
+        android:id="@+id/activity_selectImage_image_view"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_centerInParent="true"/>
+
+</RelativeLayout>

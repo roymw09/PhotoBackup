@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "1029552507938",
+    "project_id": "photolibrary-2b460",
+    "storage_bucket": "photolibrary-2b460.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1029552507938:android:33b828838b910cc1484e7b",
+        "android_client_info": {
+          "package_name": "com.rmw.photolibrary"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1029552507938-bcoruttp9qq60in05jlkgbb1rq8befm2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.rmw.photolibrary",
+            "certificate_hash": "0f9425ef36c8bf9340eea673c2b9415b1c76bcad"
+          }
+        },
+        {
+          "client_id": "1029552507938-rjv9mcdfd8rn3kafpvs3rdeaaqdpm2t8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBlsAiIJMqlm1EbyONNJYogMJynlvCvIPQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1029552507938-rjv9mcdfd8rn3kafpvs3rdeaaqdpm2t8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

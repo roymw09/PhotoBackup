@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">PhotoLib</string>
+
+    <string name="sign_in_with_google">Sign in with Google</string>
+    <string name="login_activity_text_view">PhotoLib</string>
+    <string name="alert_yes">Yes</string>
+    <string name="alert_no">No</string>
+    <string name="save_image_alert_title">Save image</string>
+    <string name="save_image_alert_message">Would you like to save this image to your device?</string>
+    <string name="delete_image_alert_title">Delete image</string>
+    <string name="delete_image_alert_message">Would you like to delete this image?</string>
+    <string name="toast_uploaded">Uploaded</string>
+    <string name="toast_logged_in">Logged in!</string>
+    <string name="toast_deleted_image">Image deleted</string>
+    <string name="toast_image_saved_to_gallery">Image saved to gallery</string>
+    <string name="toast_logged_out">Logged out!</string>
+    <string name="activity_selectImage_clearButton">Clear</string>
+    <string name="activity_selectImage_selectButton">Select</string>
+    <string name="activity_selectImage_uploadButton">Upload</string>
+    <string name="toolbar_menu_upload">Upload</string>
+    <string name="toolbar_menu_logout">Log out</string>
+    <string name="toolbar_menu_images">Images</string>
+</resources>
