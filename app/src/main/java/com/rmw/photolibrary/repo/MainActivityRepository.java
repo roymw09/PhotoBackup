@@ -52,12 +52,6 @@ public class MainActivityRepository {
             databaseReference.removeValue();
             Toast.makeText(application, R.string.toast_deleted_image, Toast.LENGTH_SHORT).show();
         });
-
-        DatabaseReference databaseReference = database.getReference()
-                .child(firebaseUserId)
-                .child(refKey);
-        databaseReference.removeValue();
-        Toast.makeText(application, R.string.toast_deleted_image, Toast.LENGTH_SHORT).show();
     }
 
     // Save image to users' gallery
