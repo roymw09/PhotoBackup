@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "1029552507938",
+    "firebase_url": "https://photolibrary-2b460-default-rtdb.firebaseio.com",
     "project_id": "photolibrary-2b460",
     "storage_bucket": "photolibrary-2b460.appspot.com"
   },
@@ -14,7 +15,15 @@
       },
       "oauth_client": [
         {
-          "client_id": "1029552507938-bcoruttp9qq60in05jlkgbb1rq8befm2.apps.googleusercontent.com",
+          "client_id": "1029552507938-281njm9krldl22tra7md5eqb44p1i4tm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.rmw.photolibrary",
+            "certificate_hash": "2a2e9cce4b845980a8e9b3cab140a23c342a5596"
+          }
+        },
+        {
+          "client_id": "1029552507938-sq533vhjbjf6qj5tlceqdqbqgdd6f1l1.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.rmw.photolibrary",
